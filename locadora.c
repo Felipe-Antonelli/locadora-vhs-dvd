@@ -76,7 +76,7 @@ void removerCliente() {
 void moduloClientes() {
     int opcao;
     do {
-        printf("\n--- MODULO CLIENTES ---\n");
+        printf("\nMODULO CLIENTES\n");
         printf("1. Cadastrar cliente\n");
         printf("2. Listar / Buscar clientes\n");
         printf("3. Editar cliente\n");
@@ -95,6 +95,38 @@ void moduloClientes() {
     } while (opcao != 0);
 }
 
+// MODULO FORNECEDORES | Autor: Rafael Gustavo de Franca Lima - RGM 48242365
+struct Fornecedor {
+    int   idFornecedor;
+    char  nome[50];
+    char  contato[30];
+    float valorDivida;
+    int   ativo;
+};
+struct Fornecedor listaFornecedores[50];
+int totalFornecedores = 0;
+
+void moduloFornecedores() {
+    int opcao;
+    do {
+        printf("\nMODULO FORNECEDORES\n");
+        printf("1. Cadastrar fornecedor\n");
+        printf("2. Listar / Buscar fornecedores\n");
+        printf("3. Editar fornecedor\n");
+        printf("4. Remover fornecedor\n");
+        printf("0. Voltar\n");
+        printf("Escolha uma acao: ");
+        scanf("%d", &opcao);
+        switch (opcao) {
+            case 1: printf("\n[Em construcao] Cadastro de fornecedor...\n"); break;
+            case 2: printf("\n[Em construcao] Listagem de fornecedores...\n"); break;
+            case 3: printf("\n[Em construcao] Edicao de fornecedor...\n"); break;
+            case 4: printf("\n[Em construcao] Remocao de fornecedor...\n"); break;
+            case 0: printf("\nVoltando ao menu principal\n"); break;
+            default: printf("\nOpcao invalida!\n");
+        }
+    } while (opcao != 0);
+}
 
 void exibirCabecalho() {
     printf("   LOCADORA DE VHS/DVD\n");
@@ -106,11 +138,13 @@ int main() {
         exibirCabecalho();
         printf("SELECIONE A PERSPECTIVA:\n");
         printf("1. Clientes\n");
+        printf("2. Fornecedores\n");
         printf("0. Encerrar o sistema\n");
         printf("Opcao: ");
         scanf("%d", &opcao);
         switch (opcao) {
-            case 1: moduloClientes(); break;
+            case 1: moduloClientes();     break;
+            case 2: moduloFornecedores(); break;
             case 0: printf("\nEncerrando o sistema. Ate logo!\n"); break;
             default: printf("\nOpcao invalida! Tente novamente.\n");
         }
