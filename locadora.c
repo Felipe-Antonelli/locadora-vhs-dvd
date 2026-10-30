@@ -118,10 +118,43 @@ void moduloFornecedores() {
         printf("Escolha uma acao: ");
         scanf("%d", &opcao);
         switch (opcao) {
-            case 1: printf("\n[Em construcao] Cadastro de fornecedor...\n"); break;
-            case 2: printf("\n[Em construcao] Listagem de fornecedores...\n"); break;
-            case 3: printf("\n[Em construcao] Edicao de fornecedor...\n"); break;
-            case 4: printf("\n[Em construcao] Remocao de fornecedor...\n"); break;
+            case 1: printf("\n[Em construcao] Cadastro de fornecedor\n"); break;
+            case 2: printf("\n[Em construcao] Listagem de fornecedores\n"); break;
+            case 3: printf("\n[Em construcao] Edicao de fornecedor\n"); break;
+            case 4: printf("\n[Em construcao] Remocao de fornecedor\n"); break;
+            case 0: printf("\nVoltando ao menu principal\n"); break;
+            default: printf("\nOpcao invalida!\n");
+        }
+    } while (opcao != 0);
+}
+
+// MODULO FILMES | Autor: Rafael Leonardo Fernandes de Lima Leal - RGM 46909371
+struct Filme {
+    int   idFilme;
+    char  titulo[50];
+    char  genero[30];
+    float precoAluguel;
+    int   disponivel;
+};
+struct Filme catalogoFilmes[50];
+int totalFilmes = 0;
+
+void moduloFilmes() {
+    int opcao;
+    do {
+        printf("\nMODULO FILMES/CATALOGO\n");
+        printf("1. Cadastrar filme\n");
+        printf("2. Listar/Buscar filmes\n");
+        printf("3. Editar preco ou disponibilidade\n");
+        printf("4. Remover filme\n");
+        printf("0. Voltar\n");
+        printf("Escolha uma acao: ");
+        scanf("%d", &opcao);
+        switch (opcao) {
+            case 1: printf("\n[Em construcao] Cadastro de filme\n"); break;
+            case 2: printf("\n[Em construcao] Listagem de filmes\n"); break;
+            case 3: printf("\n[Em construcao] Edicao de filme\n"); break;
+            case 4: printf("\n[Em construcao] Remocao de filme\n"); break;
             case 0: printf("\nVoltando ao menu principal\n"); break;
             default: printf("\nOpcao invalida!\n");
         }
@@ -129,7 +162,7 @@ void moduloFornecedores() {
 }
 
 void exibirCabecalho() {
-    printf("   LOCADORA DE VHS/DVD\n");
+    printf(" LOCADORA DE VHS/DVD\n");
 }
 
 int main() {
@@ -139,12 +172,14 @@ int main() {
         printf("SELECIONE A PERSPECTIVA:\n");
         printf("1. Clientes\n");
         printf("2. Fornecedores\n");
+        printf("3. Filmes\n");
         printf("0. Encerrar o sistema\n");
         printf("Opcao: ");
         scanf("%d", &opcao);
         switch (opcao) {
             case 1: moduloClientes();     break;
             case 2: moduloFornecedores(); break;
+            case 3: moduloFilmes();       break;
             case 0: printf("\nEncerrando o sistema. Ate logo!\n"); break;
             default: printf("\nOpcao invalida! Tente novamente.\n");
         }
