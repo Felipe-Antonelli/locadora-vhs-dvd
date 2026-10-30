@@ -1,168 +1,116 @@
 #include <stdio.h>
-
-// struct do cliente
+// LOCADORA DE VHS/DVD - Projeto P2 
+// MODULO CLIENTES | Autor: Felipe Antonelli Bueno - RGM 46686177
 struct Cliente {
-    int  id;
-    char nome[50];
-    char cpf[15];
-    char cidade[30];
-    char telefone[20];
-    int  bloqueado;   // 1 = devendo, 0 = ok
+    int   idCliente;
+    char  nome[50];
+    char  telefone[20];
+    float multasPendentes;
+    int   ativo;          
 };
-
-struct Cliente clientes[100];
+struct Cliente listaClientes[50];
 int totalClientes = 0;
 
-
-// ---- clientes ----
-
-void exibirMenuClientes() {
-    printf("\n===== MENU CLIENTES =====\n");
-    printf("1. Inserir cliente\n");
-    printf("2. Listar clientes\n");
-    printf("3. Atualizar cliente\n");
-    printf("4. Remover cliente\n");
-    printf("0. Voltar\n");
-    printf("Escolha uma opcao: ");
-}
-
 void inserirCliente() {
-    if (totalClientes >= 100) {
-        printf("\nCadastro cheio!\n");
-        return;
-    }
+    if (totalClientes >= 50) { printf("\nCadastro cheio!\n"); return; }
     struct Cliente novo;
-    novo.id = totalClientes + 1;
-    novo.bloqueado = 0;
+    novo.idCliente = totalClientes + 1;
+    novo.multasPendentes = 0;
+    novo.ativo = 1;
 
-    printf("\n--- Novo cliente (ID %d) ---\n", novo.id);
+    printf("\nNovo cliente (ID %d)\n", novo.idCliente);
     printf("Nome: ");     scanf(" %[^\n]", novo.nome);
-    printf("CPF: ");      scanf(" %[^\n]", novo.cpf);
-    printf("Cidade: ");   scanf(" %[^\n]", novo.cidade);
     printf("Telefone: "); scanf(" %[^\n]", novo.telefone);
 
-    clientes[totalClientes] = novo;
+    listaClientes[totalClientes] = novo;
     totalClientes++;
-    printf("Cliente cadastrado com sucesso!\n");
+    printf("Cliente cadastrado!\n");
 }
 
 void listarClientes() {
     int i;
-    if (totalClientes == 0) {
-        printf("\nNenhum cliente cadastrado ainda.\n");
-        return;
-    }
-    printf("\n--- LISTA DE CLIENTES ---\n");
+    if (totalClientes == 0) { printf("\nNenhum cliente cadastrado.\n"); return; }
+    printf("\nCLIENTES\n");
     for (i = 0; i < totalClientes; i++) {
-        printf("ID %d | %s | CPF: %s | %s | Tel: %s | %s\n",
-               clientes[i].id, clientes[i].nome, clientes[i].cpf,
-               clientes[i].cidade, clientes[i].telefone,
-               clientes[i].bloqueado ? "BLOQUEADO" : "Liberado");
+        printf("ID %d | %s | Tel: %s | Multa: R$ %.2f | %s\n",
+               listaClientes[i].idCliente, listaClientes[i].nome,
+               listaClientes[i].telefone, listaClientes[i].multasPendentes,
+               listaClientes[i].ativo ? "Ativo" : "Removido");
     }
 }
 
-// procura o cliente pelo id e devolve a posicao (ou -1)
-int buscarPorId(int id) {
+int buscarClientePorId(int id) {
     int i;
     for (i = 0; i < totalClientes; i++) {
-        if (clientes[i].id == id) return i;
+        if (listaClientes[i].idCliente == id) return i;
     }
     return -1;
 }
 
-void atualizarCliente() {
+void editarCliente() {
     int id, pos;
     if (totalClientes == 0) { printf("\nNenhum cliente cadastrado.\n"); return; }
-
-    printf("\nDigite o ID do cliente a atualizar: ");
+    printf("\nID do cliente a editar: ");
     scanf("%d", &id);
-    pos = buscarPorId(id);
+    pos = buscarClientePorId(id);
     if (pos == -1) { printf("Cliente nao encontrado.\n"); return; }
-
-    printf("Atualizando: %s\n", clientes[pos].nome);
-    printf("Novo nome: ");     scanf(" %[^\n]", clientes[pos].nome);
-    printf("Nova cidade: ");   scanf(" %[^\n]", clientes[pos].cidade);
-    printf("Novo telefone: "); scanf(" %[^\n]", clientes[pos].telefone);
+    printf("Novo nome: ");     scanf(" %[^\n]", listaClientes[pos].nome);
+    printf("Novo telefone: "); scanf(" %[^\n]", listaClientes[pos].telefone);
     printf("Cliente atualizado!\n");
 }
 
 void removerCliente() {
     int id, pos, i;
     if (totalClientes == 0) { printf("\nNenhum cliente cadastrado.\n"); return; }
-
-    printf("\nDigite o ID do cliente a remover: ");
+    printf("\nID do cliente a remover: ");
     scanf("%d", &id);
-    pos = buscarPorId(id);
+    pos = buscarClientePorId(id);
     if (pos == -1) { printf("Cliente nao encontrado.\n"); return; }
-
-    // puxa os de depois uma posicao pra tras
     for (i = pos; i < totalClientes - 1; i++) {
-        clientes[i] = clientes[i + 1];
+        listaClientes[i] = listaClientes[i + 1];
     }
     totalClientes--;
     printf("Cliente removido!\n");
 }
 
-void menuClientes() {
+void moduloClientes() {
     int opcao;
     do {
-        exibirMenuClientes();
+        printf("\n--- MODULO CLIENTES ---\n");
+        printf("1. Cadastrar cliente\n");
+        printf("2. Listar / Buscar clientes\n");
+        printf("3. Editar cliente\n");
+        printf("4. Remover cliente\n");
+        printf("0. Voltar\n");
+        printf("Escolha uma acao: ");
         scanf("%d", &opcao);
         switch (opcao) {
-            case 1: inserirCliente();   break;
-            case 2: listarClientes();   break;
-            case 3: atualizarCliente(); break;
-            case 4: removerCliente();   break;
-            case 0: printf("\nVoltando ao menu principal...\n"); break;
+            case 1: inserirCliente(); break;
+            case 2: listarClientes(); break;
+            case 3: editarCliente();  break;
+            case 4: removerCliente(); break;
+            case 0: printf("\nVoltando ao menu principal\n"); break;
             default: printf("\nOpcao invalida!\n");
         }
     } while (opcao != 0);
 }
 
 
-// os outros modulos ainda vamos fazer
-
-void menuFilmes() {
-    printf("\n===== MENU FILMES =====\n");
-    printf("(ainda em construcao)\n");
-}
-
-void menuLocacoes() {
-    printf("\n===== MENU LOCACOES =====\n");
-    printf("(ainda em construcao)\n");
-}
-
-void menuRelatorios() {
-    printf("\n===== MENU RELATORIOS =====\n");
-    printf("(ainda em construcao)\n");
-}
-
-
-// ---- menu principal ----
-
-void exibirMenuPrincipal() {
-    printf("\n==============================\n");
+void exibirCabecalho() {
     printf("   LOCADORA DE VHS/DVD\n");
-    printf("==============================\n");
-    printf("Bem-vindo! Selecione uma opcao:\n");
-    printf("1. Clientes\n");
-    printf("2. Filmes\n");
-    printf("3. Locacoes\n");
-    printf("4. Relatorios\n");
-    printf("0. Sair\n");
-    printf("Opcao: ");
 }
 
 int main() {
     int opcao;
     do {
-        exibirMenuPrincipal();
+        exibirCabecalho();
+        printf("SELECIONE A PERSPECTIVA:\n");
+        printf("1. Clientes\n");
+        printf("0. Encerrar o sistema\n");
+        printf("Opcao: ");
         scanf("%d", &opcao);
         switch (opcao) {
-            case 1: menuClientes();   break;
-            case 2: menuFilmes();     break;
-            case 3: menuLocacoes();   break;
-            case 4: menuRelatorios(); break;
+            case 1: moduloClientes(); break;
             case 0: printf("\nEncerrando o sistema. Ate logo!\n"); break;
             default: printf("\nOpcao invalida! Tente novamente.\n");
         }
