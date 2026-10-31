@@ -1,78 +1,65 @@
 #include <stdio.h>
-// LOCADORA DE VHS/DVD - Projeto P2 
-// MODULO CLIENTES | Autor: Felipe Antonelli Bueno - RGM 46686177
+#include <string.h>
+
+// ============================================================================
+// PARTE 1: MODELAGEM DE DADOS (ESCOPO GLOBAL - 1 STRUCT POR INTEGRANTE)
+// ============================================================================
+
+// 1.Felipe: Clientes da locadora
 struct Cliente {
     int   idCliente;
     char  nome[50];
     char  telefone[20];
     float multasPendentes;
-    int   ativo;          
+    int   ativo;           
 };
 struct Cliente listaClientes[50];
 int totalClientes = 0;
 
-void inserirCliente() {
-    if (totalClientes >= 50) { printf("\nCadastro cheio!\n"); return; }
-    struct Cliente novo;
-    novo.idCliente = totalClientes + 1;
-    novo.multasPendentes = 0;
-    novo.ativo = 1;
+// 2.Rafael Gustavo: Fornecedores (distribuidoras)
+struct Fornecedor {
+    int   idFornecedor;
+    char  nome[50];
+    char  contato[30];
+    float valorDivida;
+    int   ativo;
+};
+struct Fornecedor listaFornecedores[50];
+int totalFornecedores = 0;
 
-    printf("\nNovo cliente (ID %d)\n", novo.idCliente);
-    printf("Nome: ");     scanf(" %[^\n]", novo.nome);
-    printf("Telefone: "); scanf(" %[^\n]", novo.telefone);
+// 3.Rafael Leonardo: Catalogo de Filmes
+struct Filme {
+    int   idFilme;
+    char  titulo[50];
+    char  genero[30];
+    float precoAluguel;
+    int   disponivel;        
+};
+struct Filme catalogoFilmes[50];
+int totalFilmes = 0;
 
-    listaClientes[totalClientes] = novo;
-    totalClientes++;
-    printf("Cliente cadastrado!\n");
+// 4.Miguel: Locacoes e Relatorios
+struct Locacao {
+    int   idLocacao;
+    int   idClienteLocador;
+    int   idFilmeAlugado;
+    int   diasAluguel;
+    float valorTotal;
+};
+struct Locacao historicoLocacoes[50];
+int totalLocacoes = 0;
+
+// ============================================================================
+// PARTE 2: FUNCOES DE INTERFACE E MODULOS DE CADA INTEGRANTE
+// ============================================================================
+
+void exibirCabecalho() {
+    printf("   LOCADORA DE VHS/DVD\n");
 }
 
-void listarClientes() {
-    int i;
-    if (totalClientes == 0) { printf("\nNenhum cliente cadastrado.\n"); return; }
-    printf("\nCLIENTES\n");
-    for (i = 0; i < totalClientes; i++) {
-        printf("ID %d | %s | Tel: %s | Multa: R$ %.2f | %s\n",
-               listaClientes[i].idCliente, listaClientes[i].nome,
-               listaClientes[i].telefone, listaClientes[i].multasPendentes,
-               listaClientes[i].ativo ? "Ativo" : "Removido");
-    }
-}
-
-int buscarClientePorId(int id) {
-    int i;
-    for (i = 0; i < totalClientes; i++) {
-        if (listaClientes[i].idCliente == id) return i;
-    }
-    return -1;
-}
-
-void editarCliente() {
-    int id, pos;
-    if (totalClientes == 0) { printf("\nNenhum cliente cadastrado.\n"); return; }
-    printf("\nID do cliente a editar: ");
-    scanf("%d", &id);
-    pos = buscarClientePorId(id);
-    if (pos == -1) { printf("Cliente nao encontrado.\n"); return; }
-    printf("Novo nome: ");     scanf(" %[^\n]", listaClientes[pos].nome);
-    printf("Novo telefone: "); scanf(" %[^\n]", listaClientes[pos].telefone);
-    printf("Cliente atualizado!\n");
-}
-
-void removerCliente() {
-    int id, pos, i;
-    if (totalClientes == 0) { printf("\nNenhum cliente cadastrado.\n"); return; }
-    printf("\nID do cliente a remover: ");
-    scanf("%d", &id);
-    pos = buscarClientePorId(id);
-    if (pos == -1) { printf("Cliente nao encontrado.\n"); return; }
-    for (i = pos; i < totalClientes - 1; i++) {
-        listaClientes[i] = listaClientes[i + 1];
-    }
-    totalClientes--;
-    printf("Cliente removido!\n");
-}
-
+// ----------------------------------------------------------------------------
+// MODULO 1: CLIENTES | Autor: Felipe Antonelli Bueno - RGM 46686177
+// ----------------------------------------------------------------------------
 void moduloClientes() {
     int opcao;
     do {
@@ -85,27 +72,19 @@ void moduloClientes() {
         printf("Escolha uma acao: ");
         scanf("%d", &opcao);
         switch (opcao) {
-            case 1: inserirCliente(); break;
-            case 2: listarClientes(); break;
-            case 3: editarCliente();  break;
-            case 4: removerCliente(); break;
+            case 1: printf("\n[Em construcao] Cadastro de cliente\n"); break;
+            case 2: printf("\n[Em construcao] Listagem de clientes\n"); break;
+            case 3: printf("\n[Em construcao] Edicao de cliente\n"); break;
+            case 4: printf("\n[Em construcao] Remocao de cliente\n"); break;
             case 0: printf("\nVoltando ao menu principal\n"); break;
             default: printf("\nOpcao invalida!\n");
         }
     } while (opcao != 0);
 }
 
-// MODULO FORNECEDORES | Autor: Rafael Gustavo de Franca Lima - RGM 48242365
-struct Fornecedor {
-    int   idFornecedor;
-    char  nome[50];
-    char  contato[30];
-    float valorDivida;
-    int   ativo;
-};
-struct Fornecedor listaFornecedores[50];
-int totalFornecedores = 0;
-
+// ----------------------------------------------------------------------------
+// MODULO 2: FORNECEDORES | Autor: Rafael Gustavo de Franca Lima - RGM 48242365
+// ----------------------------------------------------------------------------
 void moduloFornecedores() {
     int opcao;
     do {
@@ -128,23 +107,15 @@ void moduloFornecedores() {
     } while (opcao != 0);
 }
 
-// MODULO FILMES | Autor: Rafael Leonardo Fernandes de Lima Leal - RGM 46909371
-struct Filme {
-    int   idFilme;
-    char  titulo[50];
-    char  genero[30];
-    float precoAluguel;
-    int   disponivel;
-};
-struct Filme catalogoFilmes[50];
-int totalFilmes = 0;
-
+// ----------------------------------------------------------------------------
+// MODULO 3: FILMES | Autor: Rafael Leonardo Fernandes de Lima Leal - RGM 46909371
+// ----------------------------------------------------------------------------
 void moduloFilmes() {
     int opcao;
     do {
-        printf("\nMODULO FILMES/CATALOGO\n");
+        printf("\nMODULO FILMES / CATALOGO\n");
         printf("1. Cadastrar filme\n");
-        printf("2. Listar/Buscar filmes\n");
+        printf("2. Listar / Buscar filmes\n");
         printf("3. Editar preco ou disponibilidade\n");
         printf("4. Remover filme\n");
         printf("0. Voltar\n");
@@ -161,10 +132,38 @@ void moduloFilmes() {
     } while (opcao != 0);
 }
 
-void exibirCabecalho() {
-    printf(" LOCADORA DE VHS/DVD\n");
+// ----------------------------------------------------------------------------
+// MODULO 4: LOCACOES E RELATORIOS | Autor: Miguel Mazorca - RGM 49858998
+// ----------------------------------------------------------------------------
+void moduloLocacoesRelatorios() {
+    int opcao;
+    do {
+        printf("\nMODULO LOCACOES E RELATORIOS\n");
+        printf("1. Registrar locacao (cruza cliente + filme)\n");
+        printf("2. Listar historico de locacoes\n");
+        printf("3. Devolver / cancelar locacao\n");
+        printf("4. [RELATORIO] Filme mais alugado\n");
+        printf("5. [RELATORIO] Cliente que mais alugou\n");
+        printf("6. [RELATORIO] Locacoes por cliente\n");
+        printf("0. Voltar\n");
+        printf("Escolha uma acao: ");
+        scanf("%d", &opcao);
+        switch (opcao) {
+            case 1: printf("\n[Em construcao] Registro de locacao\n"); break;
+            case 2: printf("\n[Em construcao] Historico de locacoes\n"); break;
+            case 3: printf("\n[Em construcao] Devolucao de locacao\n"); break;
+            case 4: printf("\n[Em construcao] Ranking de filme mais alugado\n"); break;
+            case 5: printf("\n[Em construcao] Cliente que mais alugou\n"); break;
+            case 6: printf("\n[Em construcao] Locacoes por cliente\n"); break;
+            case 0: printf("\nVoltando ao menu principal\n"); break;
+            default: printf("\nOpcao invalida!\n");
+        }
+    } while (opcao != 0);
 }
 
+// ============================================================================
+// PARTE 3: FUNCAO PRINCIPAL (MAIN) - DESPACHANTE DE MENUS
+// ============================================================================
 int main() {
     int opcao;
     do {
@@ -173,13 +172,15 @@ int main() {
         printf("1. Clientes\n");
         printf("2. Fornecedores\n");
         printf("3. Filmes\n");
+        printf("4. Locacoes e Relatorios\n");
         printf("0. Encerrar o sistema\n");
         printf("Opcao: ");
         scanf("%d", &opcao);
         switch (opcao) {
-            case 1: moduloClientes();     break;
-            case 2: moduloFornecedores(); break;
-            case 3: moduloFilmes();       break;
+            case 1: moduloClientes();           break;
+            case 2: moduloFornecedores();       break;
+            case 3: moduloFilmes();             break;
+            case 4: moduloLocacoesRelatorios(); break;
             case 0: printf("\nEncerrando o sistema. Ate logo!\n"); break;
             default: printf("\nOpcao invalida! Tente novamente.\n");
         }
