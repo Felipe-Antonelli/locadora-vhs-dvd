@@ -142,9 +142,9 @@ void moduloLocacoesRelatorios() {
         printf("1. Registrar locacao (cruza cliente + filme)\n");
         printf("2. Listar historico de locacoes\n");
         printf("3. Devolver / cancelar locacao\n");
-        printf("4. [RELATORIO] Filme mais alugado\n");
-        printf("5. [RELATORIO] Cliente que mais alugou\n");
-        printf("6. [RELATORIO] Locacoes por cliente\n");
+        printf("4. Filme mais alugado\n");
+        printf("5. Cliente que mais alugou\n");
+        printf("6. Locacoes por cliente\n");
         printf("0. Voltar\n");
         printf("Escolha uma acao: ");
         scanf("%d", &opcao);
