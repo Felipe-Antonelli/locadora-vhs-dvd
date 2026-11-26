@@ -3,9 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 
-// ----------------------------------------------------------------------------
-// MODULO 2: FORNECEDORES | Autor: Rafael Gustavo de Franca Lima - RGM 48242365
-// ----------------------------------------------------------------------------
+// Autor: Rafael Gustavo de Franca Lima - RGM 48242365
 struct Fornecedor {
     int   idFornecedor;
     char  nome[50];
