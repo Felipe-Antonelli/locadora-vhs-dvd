@@ -11,19 +11,17 @@ struct Filme {
     char  titulo[50];
     char  genero[30];
     float precoAluguel;
-    int   disponivel;
 };
 struct Filme catalogoFilmes[50];
 int totalFilmes = 0;
 
 void salvarFilmesCSV() {
     FILE *arq = fopen("filmes.csv", "w");
-    if (arq == NULL) { printf("[ERRO] Nao foi possivel salvar filmes.csv\n"); return; }
+    if (arq == NULL) { printf("Erro ao salvar os dados.\n"); return; }
     for (int i = 0; i < totalFilmes; i++) {
-        fprintf(arq, "%d;%s;%s;%.2f;%d\n",
+        fprintf(arq, "%d;%s;%s;%.2f\n",
                 catalogoFilmes[i].idFilme, catalogoFilmes[i].titulo,
-                catalogoFilmes[i].genero, catalogoFilmes[i].precoAluguel,
-                catalogoFilmes[i].disponivel);
+                catalogoFilmes[i].genero, catalogoFilmes[i].precoAluguel);
     }
     fclose(arq);
 }
@@ -32,12 +30,11 @@ void carregarFilmesCSV() {
     FILE *arq = fopen("filmes.csv", "r");
     if (arq == NULL) return;
     totalFilmes = 0;
-    while (totalFilmes < 50 && fscanf(arq, "%d;%49[^;];%29[^;];%f;%d\n",
+    while (totalFilmes < 50 && fscanf(arq, "%d;%49[^;];%29[^;];%f\n",
            &catalogoFilmes[totalFilmes].idFilme,
            catalogoFilmes[totalFilmes].titulo,
            catalogoFilmes[totalFilmes].genero,
-           &catalogoFilmes[totalFilmes].precoAluguel,
-           &catalogoFilmes[totalFilmes].disponivel) == 5) {
+           &catalogoFilmes[totalFilmes].precoAluguel) == 4) {
         totalFilmes++;
     }
     fclose(arq);
@@ -45,33 +42,31 @@ void carregarFilmesCSV() {
 
 int buscarFilmePorId(int id) {
     for (int i = 0; i < totalFilmes; i++)
-        if (catalogoFilmes[i].idFilme == id && catalogoFilmes[i].disponivel == 1) return i;
+        if (catalogoFilmes[i].idFilme == id) return i;
     return -1;
 }
 
 void cadastrarFilme() {
-    if (totalFilmes >= 50) { printf("\n[ALERTA] Catalogo cheio!\n"); return; }
+    if (totalFilmes >= 50) { printf("\nCatalogo cheio.\n"); return; }
     struct Filme novo;
     novo.idFilme = totalFilmes + 1;
-    novo.disponivel = 1;
     printf("\n--- NOVO FILME (ID %d) ---\n", novo.idFilme);
-    printf("Titulo: ");            scanf(" %49[^\n]", novo.titulo);
-    printf("Genero: ");            scanf(" %29[^\n]", novo.genero);
+    printf("Titulo: ");                scanf(" %49[^\n]", novo.titulo);
+    printf("Genero: ");                scanf(" %29[^\n]", novo.genero);
     printf("Preco do aluguel (R$): "); scanf("%f", &novo.precoAluguel);
     catalogoFilmes[totalFilmes] = novo;
     totalFilmes++;
     salvarFilmesCSV();
-    printf("Filme cadastrado e salvo no CSV!\n");
+    printf("Filme cadastrado com sucesso!\n");
 }
 
 void listarOuBuscarFilmes() {
     char termo[50];
-    printf("\nBuscar por titulo (ou 0 para listar todos): ");
+    printf("\nDigite parte do titulo para buscar (ou 0 para listar todos): ");
     scanf(" %49[^\n]", termo);
-    printf("\n=== CATALOGO DE FILMES ===\n");
+    printf("\n===== FILMES =====\n");
     int achou = 0;
     for (int i = 0; i < totalFilmes; i++) {
-        if (catalogoFilmes[i].disponivel == 0) continue;
         if (strcmp(termo, "0") != 0 && strstr(catalogoFilmes[i].titulo, termo) == NULL) continue;
         printf("ID %d | %s | Genero: %s | R$ %.2f\n",
                catalogoFilmes[i].idFilme, catalogoFilmes[i].titulo,
@@ -87,11 +82,11 @@ void editarFilme() {
     scanf("%d", &id);
     int pos = buscarFilmePorId(id);
     if (pos == -1) { printf("Filme nao encontrado.\n"); return; }
-    printf("Novo titulo: ");       scanf(" %49[^\n]", catalogoFilmes[pos].titulo);
-    printf("Novo genero: ");       scanf(" %29[^\n]", catalogoFilmes[pos].genero);
-    printf("Novo preco (R$): ");   scanf("%f", &catalogoFilmes[pos].precoAluguel);
+    printf("Novo titulo: ");     scanf(" %49[^\n]", catalogoFilmes[pos].titulo);
+    printf("Novo genero: ");     scanf(" %29[^\n]", catalogoFilmes[pos].genero);
+    printf("Novo preco (R$): "); scanf("%f", &catalogoFilmes[pos].precoAluguel);
     salvarFilmesCSV();
-    printf("Filme atualizado e salvo!\n");
+    printf("Filme atualizado com sucesso!\n");
 }
 
 void removerFilme() {
@@ -100,15 +95,17 @@ void removerFilme() {
     scanf("%d", &id);
     int pos = buscarFilmePorId(id);
     if (pos == -1) { printf("Filme nao encontrado.\n"); return; }
-    catalogoFilmes[pos].disponivel = 0;
+    for (int i = pos; i < totalFilmes - 1; i++)
+        catalogoFilmes[i] = catalogoFilmes[i + 1];
+    totalFilmes--;
     salvarFilmesCSV();
-    printf("Filme removido do catalogo e salvo!\n");
+    printf("Filme removido do catalogo com sucesso!\n");
 }
 
 void moduloFilmes() {
     int op;
     do {
-        printf("\n--- MODULO FILMES (CSV ATIVO) ---\n");
+        printf("\n===== FILMES =====\n");
         printf("1. Cadastrar filme\n");
         printf("2. Listar / Buscar filmes\n");
         printf("3. Editar filme\n");
