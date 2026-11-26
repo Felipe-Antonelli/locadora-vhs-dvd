@@ -3,9 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 
-// ----------------------------------------------------------------------------
-// MODULO 1: CLIENTES | Autor: Felipe Antonelli Bueno - RGM 46686177
-// ----------------------------------------------------------------------------
+// Autor: Felipe Antonelli Bueno - RGM 46686177
 struct Cliente {
     int   idCliente;
     char  nome[50];
