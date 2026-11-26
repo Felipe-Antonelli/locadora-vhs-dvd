@@ -1,6 +1,7 @@
 #ifndef LOCACOES_H
 #define LOCACOES_H
 #include <stdio.h>
+#include <string.h>
 #include "clientes.h"
 #include "filmes.h"
 
@@ -19,7 +20,7 @@ int totalLocacoes = 0;
 
 void salvarLocacoesCSV() {
     FILE *arq = fopen("locacoes.csv", "w");
-    if (arq == NULL) { printf("[ERRO] Nao foi possivel salvar locacoes.csv\n"); return; }
+    if (arq == NULL) { printf("Erro ao salvar os dados.\n"); return; }
     for (int i = 0; i < totalLocacoes; i++) {
         fprintf(arq, "%d;%d;%d;%d;%.2f\n",
                 historicoLocacoes[i].idLocacao, historicoLocacoes[i].idClienteLocador,
@@ -45,10 +46,9 @@ void carregarLocacoesCSV() {
 }
 
 void registrarLocacao() {
-    if (totalLocacoes >= 100) { printf("\n[ALERTA] Limite de locacoes atingido!\n"); return; }
+    if (totalLocacoes >= 100) { printf("\nLimite de locacoes atingido.\n"); return; }
     int idc, idf, dias;
-    printf("\n--- NOVA LOCACAO ---\n");
-    printf("ID do cliente: "); scanf("%d", &idc);
+    printf("\nID do cliente: "); scanf("%d", &idc);
     int posC = buscarClientePorId(idc);
     if (posC == -1) { printf("Cliente inexistente! Cadastre o cliente antes.\n"); return; }
     printf("ID do filme: ");   scanf("%d", &idf);
@@ -70,15 +70,19 @@ void registrarLocacao() {
 }
 
 void listarLocacoes() {
-    printf("\n=== HISTORICO DE LOCACOES ===\n");
+    printf("\n===== HISTORICO DE LOCACOES =====\n");
     if (totalLocacoes == 0) { printf("Nenhuma locacao registrada.\n"); return; }
     for (int i = 0; i < totalLocacoes; i++) {
         int posC = buscarClientePorId(historicoLocacoes[i].idClienteLocador);
         int posF = buscarFilmePorId(historicoLocacoes[i].idFilmeAlugado);
+        char nomeCliente[50];
+        char tituloFilme[50];
+        if (posC != -1) strcpy(nomeCliente, listaClientes[posC].nome);
+        else            strcpy(nomeCliente, "(removido)");
+        if (posF != -1) strcpy(tituloFilme, catalogoFilmes[posF].titulo);
+        else            strcpy(tituloFilme, "(removido)");
         printf("Loc %d | Cliente: %s | Filme: %s | %d dias | R$ %.2f\n",
-               historicoLocacoes[i].idLocacao,
-               (posC != -1) ? listaClientes[posC].nome : "(removido)",
-               (posF != -1) ? catalogoFilmes[posF].titulo : "(removido)",
+               historicoLocacoes[i].idLocacao, nomeCliente, tituloFilme,
                historicoLocacoes[i].diasAluguel, historicoLocacoes[i].valorTotal);
     }
 }
@@ -107,7 +111,7 @@ void relatorioFilmeMaisAlugado() {
             if (historicoLocacoes[j].idFilmeAlugado == catalogoFilmes[i].idFilme) cont++;
         if (cont > maiorCont) { maiorCont = cont; melhorPos = i; }
     }
-    printf("\n=== FILME MAIS ALUGADO ===\n");
+    printf("\n===== FILME MAIS ALUGADO =====\n");
     if (melhorPos != -1)
         printf("\"%s\" com %d locacoes.\n", catalogoFilmes[melhorPos].titulo, maiorCont);
     else
@@ -123,7 +127,7 @@ void relatorioClienteVIP() {
             if (historicoLocacoes[j].idClienteLocador == listaClientes[i].idCliente) cont++;
         if (cont > maiorCont) { maiorCont = cont; vipPos = i; }
     }
-    printf("\n=== CLIENTE VIP (MAIS ALUGOU) ===\n");
+    printf("\n===== CLIENTE VIP (MAIS ALUGOU) =====\n");
     if (vipPos != -1)
         printf("%s com %d locacoes.\n", listaClientes[vipPos].nome, maiorCont);
     else
@@ -135,14 +139,16 @@ void relatorioLocacoesPorCliente() {
     printf("\nID do cliente: "); scanf("%d", &id);
     int posC = buscarClientePorId(id);
     if (posC == -1) { printf("Cliente nao encontrado.\n"); return; }
-    printf("\n=== LOCACOES DE %s ===\n", listaClientes[posC].nome);
+    printf("\n===== LOCACOES DE %s =====\n", listaClientes[posC].nome);
     float total = 0; int qtd = 0;
     for (int j = 0; j < totalLocacoes; j++) {
         if (historicoLocacoes[j].idClienteLocador != id) continue;
         int posF = buscarFilmePorId(historicoLocacoes[j].idFilmeAlugado);
+        char tituloFilme[50];
+        if (posF != -1) strcpy(tituloFilme, catalogoFilmes[posF].titulo);
+        else            strcpy(tituloFilme, "(removido)");
         printf("- %s | %d dias | R$ %.2f\n",
-               (posF != -1) ? catalogoFilmes[posF].titulo : "(removido)",
-               historicoLocacoes[j].diasAluguel, historicoLocacoes[j].valorTotal);
+               tituloFilme, historicoLocacoes[j].diasAluguel, historicoLocacoes[j].valorTotal);
         total += historicoLocacoes[j].valorTotal; qtd++;
     }
     if (qtd == 0) printf("Esse cliente nao tem locacoes.\n");
@@ -154,18 +160,14 @@ void relatorioLocacoesPorCliente() {
 void mapaDaEstante() {
     int grade[PRAT_LINHAS][PRAT_COLUNAS];
     int k = 0;
-
     for (int i = 0; i < PRAT_LINHAS; i++) {
         for (int j = 0; j < PRAT_COLUNAS; j++) {
-            if (k < totalFilmes && catalogoFilmes[k].disponivel == 1)
-                grade[i][j] = catalogoFilmes[k].idFilme;
-            else
-                grade[i][j] = 0;
+            if (k < totalFilmes) grade[i][j] = catalogoFilmes[k].idFilme;
+            else                 grade[i][j] = 0;
             k++;
         }
     }
-
-    printf("\n=== MAPA 2D DA ESTANTE (codigo do filme por posicao) ===\n");
+    printf("\n===== MAPA DA ESTANTE (codigo do filme por posicao) =====\n");
     int ocupadas = 0;
     for (int i = 0; i < PRAT_LINHAS; i++) {
         printf("Prateleira %c: ", 'A' + i);
@@ -181,14 +183,14 @@ void mapaDaEstante() {
 void moduloLocacoes() {
     int op;
     do {
-        printf("\n--- MODULO LOCACOES E RELATORIOS (CSV ATIVO) ---\n");
+        printf("\n===== LOCACOES E RELATORIOS =====\n");
         printf("1. Registrar locacao\n");
         printf("2. Listar locacoes\n");
         printf("3. Devolver / Cancelar locacao\n");
         printf("4. Relatorio: filme mais alugado\n");
         printf("5. Relatorio: cliente VIP\n");
         printf("6. Relatorio: locacoes por cliente\n");
-        printf("7. Mapa 2D da estante\n");
+        printf("7. Mapa da estante\n");
         printf("0. Voltar\n");
         printf("Escolha: ");
         if (scanf("%d", &op) != 1) { op = 0; break; }
