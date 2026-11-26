@@ -43,7 +43,7 @@ int main() {
             case 2: moduloFornecedores(); break;
             case 3: moduloFilmes();       break;
             case 4: moduloLocacoes();     break;
-            case 0: printf("\nEncerrando o sistema. Dados salvos nos .csv. Ate logo!\n"); break;
+            case 0: printf("\nEncerrando o sistema. Ate logo!\n"); break;
             default: printf("\nOpcao invalida! Tente novamente.\n");
         }
         if (op != 0) {
