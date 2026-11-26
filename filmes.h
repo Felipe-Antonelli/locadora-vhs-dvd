@@ -3,9 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 
-// ----------------------------------------------------------------------------
-// MODULO 3: FILMES | Autor: Rafael Leonardo Fernandes de Lima Leal - RGM 46909371
-// ----------------------------------------------------------------------------
+// Autor: Rafael Leonardo Fernandes de Lima Leal - RGM 46909371
 struct Filme {
     int   idFilme;
     char  titulo[50];
