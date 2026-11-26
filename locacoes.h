@@ -5,9 +5,7 @@
 #include "clientes.h"
 #include "filmes.h"
 
-// ----------------------------------------------------------------------------
-// MODULO 4: LOCACOES E RELATORIOS | Autor: Miguel Mazorca - RGM 49858998
-// ----------------------------------------------------------------------------
+// Autor: Miguel Mazorca - RGM 49858998
 struct Locacao {
     int   idLocacao;
     int   idClienteLocador;
